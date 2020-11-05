@@ -5,7 +5,9 @@
   "main": "server.js",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.10.11"
+    "mongoose": "^5.10.11",
+    "react-router-dom": "^5.2.0",
+    "semantic-ui-react": "^2.0.1"
   },
   "devDependencies": {},
   "scripts": {
