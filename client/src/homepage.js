@@ -30,17 +30,17 @@ export default class MenuExampleSecondaryPointing extends Component {
 
           <Menu.Menu position='right'>
             <Menu.Item
-              name='logout'
+              name='Login'
               active={activeItem === 'Login'}
               onClick={this.handleItemClick}
             />
             <Menu.Item
-              name='logout'
+              name='Logout'
               active={activeItem === 'Logout'}
               onClick={this.handleItemClick}
             />
                         <Menu.Item
-              name='logout'
+              name='Sign Up'
               active={activeItem === 'Sign Up'}
               onClick={this.handleItemClick}
             />
