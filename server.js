@@ -7,7 +7,7 @@ const path = require('path');
 const publicPath = path.join(__dirname, 'client/build');
 app.use(express.static(publicPath));
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://mpljungh:Leucid!79@cluster0.cqxct.mongodb.net/Cluster0?retryWrites=true&w=majority');
+mongoose.connect(process.env.MONGODB_URI);
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(publicPath, 'index.html'));
