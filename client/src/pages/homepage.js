@@ -76,7 +76,7 @@ class DesktopContainer extends Component {
   showFixedMenu = () => this.setState({ fixed: true })
 
   render() {
-    const { children } = this.props
+    const { children, history } = this.props;
     const { fixed } = this.state
 
     return (
@@ -103,17 +103,22 @@ class DesktopContainer extends Component {
                 <Menu.Item as='a' active>
                   Home
                 </Menu.Item>
-                <Menu.Item as='a'>Work</Menu.Item>
-                <Menu.Item as='a'>Company</Menu.Item>
-                <Menu.Item as='a'>Careers</Menu.Item>
-                <Menu.Item position='right'>
-                  <Button as='a' inverted={!fixed}>
-                    Log in
-                  </Button>
-                  <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
-                    Sign Up
-                  </Button>
-                </Menu.Item>
+                {localStorage.getItem('token') ? <Menu.Item as='a' onClick={() => history.push('/posts')}>Post</Menu.Item> : ''}
+                {localStorage.getItem('token') ? (
+                  <Menu.Item onClick={() => {
+                    localStorage.removeItem('token');
+                    window.location.reload();
+                  }}>Log out</Menu.Item>
+                ) : (
+                  <Menu.Item position='right'>
+                    <Button as='a' inverted={!fixed} onClick={() => history.push('/login')}>
+                      Log in
+                    </Button>
+                    <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }} onClick={() => history.push('/signup')}>
+                      Sign Up
+                    </Button>
+                  </Menu.Item>
+                )}
               </Container>
             </Menu>
             <HomepageHeading />
@@ -138,7 +143,7 @@ class MobileContainer extends Component {
   handleToggle = () => this.setState({ sidebarOpened: true })
 
   render() {
-    const { children } = this.props
+    const { children, history } = this.props
     const { sidebarOpened } = this.state
 
     return (
@@ -158,8 +163,16 @@ class MobileContainer extends Component {
             <Menu.Item as='a'>Work</Menu.Item>
             <Menu.Item as='a'>Company</Menu.Item>
             <Menu.Item as='a'>Careers</Menu.Item>
-            <Menu.Item as='a'>Log in</Menu.Item>
-            <Menu.Item as='a'>Sign Up</Menu.Item>
+
+            {localStorage.getItem('token') ? <Menu.Item onClick={() => {
+              localStorage.removeItem('token');
+              window.location.reload();
+            }}>Log Out</Menu.Item> : (
+              <>
+                <Menu.Item as='a'>Log in</Menu.Item>
+                <Menu.Item as='a'>Sign Up</Menu.Item>
+              </>
+            )}
           </Sidebar>
 
           <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -174,14 +187,25 @@ class MobileContainer extends Component {
                   <Menu.Item onClick={this.handleToggle}>
                     <Icon name='sidebar' />
                   </Menu.Item>
-                  <Menu.Item position='right'>
-                    <Button as='a' inverted>
-                      Log in
-                    </Button>
-                    <Button as='a' inverted style={{ marginLeft: '0.5em' }}>
-                      Sign Up
-                    </Button>
-                  </Menu.Item>
+                  {localStorage.getItem('token') ? (
+                    <Menu.Item position='right'>
+                      <Button as='a' inverted onClick={() => {
+                        localStorage.removeItem('token');
+                        window.location.reload();
+                      }}>
+                        Log out
+                      </Button>
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item position='right'>
+                      <Button as='a' inverted onClick={() => history.push('/login')}>
+                        Log in
+                      </Button>
+                      <Button as='a' inverted style={{ marginLeft: '0.5em' }} onClick={() => history.push('/signup')}>
+                        Sign Up
+                      </Button>
+                    </Menu.Item>
+                  )}
                 </Menu>
               </Container>
               <HomepageHeading mobile />
@@ -199,14 +223,14 @@ MobileContainer.propTypes = {
   children: PropTypes.node,
 }
 
-const ResponsiveContainer = ({ children }) => (
+const ResponsiveContainer = ({ children, history }) => (
   /* Heads up!
    * For large applications it may not be best option to put all page into these containers at
    * they will be rendered twice for SSR.
    */
   <MediaContextProvider>
-    <DesktopContainer>{children}</DesktopContainer>
-    <MobileContainer>{children}</MobileContainer>
+    <DesktopContainer history={history}>{children}</DesktopContainer>
+    <MobileContainer history={history}>{children}</MobileContainer>
   </MediaContextProvider>
 )
 
@@ -214,8 +238,8 @@ ResponsiveContainer.propTypes = {
   children: PropTypes.node,
 }
 
-const HomepageLayout = () => (
-  <ResponsiveContainer>
+const HomepageLayout = ({ history }) => (
+  <ResponsiveContainer history={history}>
     <Segment style={{ padding: '8em 0em' }} vertical>
       <Grid container stackable verticalAlign='middle'>
         <Grid.Row>
