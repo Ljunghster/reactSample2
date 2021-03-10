@@ -10,7 +10,7 @@ const postSchema = new mongoose.Schema({
         required: 'Please enter a message.'
     },
     date: {
-       type: Date,
+       type: Number,
        default: new Date().getTime() 
     },
 });

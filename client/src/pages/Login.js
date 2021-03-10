@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Menu from '../components/Menu';
 
 class Login extends React.Component {
     handleSubmit = async event => {
@@ -22,19 +23,22 @@ class Login extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <div>
-                    <label>Email</label>
-                    <input type="email" name="email" />
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" name="password" />
-                </div>
-                <div>
-                    <button type="submit">Login</button>
-                </div>
-            </form>
+            <>
+                <Menu history={this.props.history} />
+                <form onSubmit={this.handleSubmit}>
+                    <div>
+                        <label>Email</label>
+                        <input type="email" name="email" />
+                    </div>
+                    <div>
+                        <label>Password</label>
+                        <input type="password" name="password" />
+                    </div>
+                    <div>
+                        <button type="submit">Login</button>
+                    </div>
+                </form>
+            </>
         )
     }
 }

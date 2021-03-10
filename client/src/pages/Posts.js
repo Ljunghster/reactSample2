@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Container, Card } from 'semantic-ui-react';
 import Post from './Post';
+import Comment from './Comment';
 
 class Posts extends React.Component {
     state ={
@@ -27,6 +28,14 @@ class Posts extends React.Component {
         }, 1500);
     }
 
+    deletePost = async (postId) => {
+        await axios.delete('/api/posts/' + postId, {
+            headers: {
+                Authorization: `jwt ${localStorage.getItem('token')}`,
+            },
+        });
+    }
+
     render() {
         return (
             <>
@@ -34,11 +43,17 @@ class Posts extends React.Component {
                 <Post />
                 {this.state.posts.map(post => {
                     return (
-                        <Card key={post._id}>
-                            <Card.Description>
-                                <p>{post.message}</p>
-                            </Card.Description>
-                        </Card>
+                        <>
+                            <Card key={post._id}>
+                                <Card.Description>
+                                    <p>{post.message}</p>
+                                </Card.Description>
+                                <Card.Description>
+                                    <Comment postId={post._id} />
+                                </Card.Description>
+                            </Card>
+                            <button onClick={() => this.deletePost(post._id)}>Delete</button>
+                        </>
                     );
                 })}
             </Container>

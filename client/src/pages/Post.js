@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Form } from 'semantic-ui-react';
+import Menu from '../components/Menu';
 
 class Post extends React.Component {
     handleSubmit = async (e) => {
@@ -22,6 +23,7 @@ class Post extends React.Component {
     render() {
         return (
             <div>
+                <Menu history={this.props.history} />
                 <Form onSubmit={this.handleSubmit}>
                     <Form.TextArea name="message" />
                     <Form.Button type="submit">Create Post</Form.Button>
