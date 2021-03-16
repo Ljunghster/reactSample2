@@ -50,7 +50,7 @@ class Posts extends React.Component {
         return (
             <>
             <Container>
-                <Post />
+                <Post history={this.props.history} />
                 {this.state.posts.map(post => {
                     return (
                         <>
