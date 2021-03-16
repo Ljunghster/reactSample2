@@ -8,9 +8,14 @@ class Comment extends React.Component {
     }
 
     componentDidMount() {
-      //  console.log(this.props);
         setInterval(async () => {
-            const postComments = await axios.get(`/api/comments/${this.props.postId}`);
+            const postComments = await axios.get(`/api/comments/${this.props.postId}`,
+                {
+                    headers: {
+                        Authorization: `jwt ${localStorage.getItem('token')}`
+                    }
+                }
+            );
 
             this.setState({
                 isLoading: false,

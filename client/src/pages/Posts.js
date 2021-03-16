@@ -7,13 +7,13 @@ import Comment from './Comment';
 class Posts extends React.Component {
     state ={
         isLoading: true,
-        posts: []
+        posts: [],
+        userId: ''
     }
 
     componentDidMount() {
         setInterval(async () => {
             const posts = await axios.get('/api/posts',
-                {},
                 {
                     headers: {
                         Authorization: `jwt ${localStorage.getItem('token')}`
@@ -26,6 +26,16 @@ class Posts extends React.Component {
                 posts: posts.data
             });
         }, 1500);
+
+        (async () => {
+            const {data} = await axios.get('/api/user', {
+                headers: { Authorization: `jwt ${localStorage.getItem('token')}` }
+            });
+
+            this.setState({
+                userId: data._id
+            });
+        })();
     }
 
     deletePost = async (postId) => {
@@ -52,7 +62,7 @@ class Posts extends React.Component {
                                     <Comment postId={post._id} />
                                 </Card.Description>
                             </Card>
-                            <button onClick={() => this.deletePost(post._id)}>Delete</button>
+                            {this.state.userId === post.userId ? <button onClick={() => this.deletePost(post._id)}>Delete</button>: ''}
                         </>
                     );
                 })}

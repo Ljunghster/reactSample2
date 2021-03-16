@@ -8,7 +8,6 @@ const JwtStrategy = require('passport-jwt').Strategy;
 
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const { use } = require('passport');
 
 passport.use(
     'register',
@@ -85,6 +84,7 @@ passport.use(
                 done(null, false, { message: 'User does not exist' });
             }
         } catch (err) {
+            console.log(err)
             done(err);
         }
     })
