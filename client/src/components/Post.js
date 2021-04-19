@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Form } from 'semantic-ui-react';
-import Menu from '../components/Menu';
+import Menu from './Menu';
 
 class Post extends React.Component {
     handleSubmit = async (e) => {

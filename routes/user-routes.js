@@ -8,23 +8,31 @@ const jwt = require('jsonwebtoken');
 router.post('/api/users/register', async (req, res, next) => {
     passport.authenticate('register', (err, user, info) => {
         if (err) {
-            console.log(err);
             res.status(422).send(err);
         }
         else if (info != undefined) {
-            console.log(info.message);
             res.status(422).json(info);
         }
         else {
-            req.logIn(user, err => {
-                if (err) {
-                    console.log(err);
-                    res.status(422).send(err);
+            passport.authenticate('login', (loginErr, loginUser, loginInfo) => {
+                if (loginErr) {
+                    res.status(500).json({ message: 'Internal Server Error.' });
+                } else if (loginInfo != undefined) {
+                    res.status(422).json(loginInfo);
+                } else {
+                    req.logIn(loginUser, err => {
+                        if (err) {
+                            res.status(422).send(err);
+                        }
+                        else {
+                            const token = jwt.sign({ id: req.body.email }, 'keyboardcat');
+                            res.status(200).json({
+                                token
+                            })
+                        }
+                    });
                 }
-                else {
-                    res.status(200).json({ messsage: 'User created' })
-                }
-            })
+            })(req, res, next);
         }
     })(req, res, next);
 });
@@ -32,11 +40,9 @@ router.post('/api/users/register', async (req, res, next) => {
 router.post('/api/users/login', async (req, res, next) => {
     passport.authenticate('login', (err, user, info) => {
         if (err) {
-            console.log(err);
             res.status(500).json({ message: 'Internal Server Error' });
         }
         if (info != undefined) {
-            console.log(info.message);
             res.status(422).json(info);
         }
         else {
@@ -59,6 +65,50 @@ router.post('/create-post', passport.authenticate('jwt', { session: false }), (r
         message: req.body.message
     });
     res.end('Post succesfully created.');
+});
+
+router.patch('/api/posts/:postId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    // get the current user's userId
+    // find the post with the matching postId and userId
+    // if the post does not exist, send an error
+    // if the post does exist, update the message
+
+    const userId = req.user._id;
+    const message = req.body.message;
+
+    const post = await Post.findById(req.params.postId);
+    if (post.userId !== userId) {
+        res.status(403).end('-________-.')
+    }
+
+    try {
+        await Post.update({ _id: req.params.postId, userId }, { $set: { message } });
+        res.status(200).end();
+    } catch (err) {
+        res.status(500).end('Internal Server Error!');
+    }
+});
+
+router.patch('/api/comments/:commentId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    // get the current user's userId
+    // find the comment with the matching commentId and userId
+    // if the comment does not exist, send an error
+    // if the comment does exist, update it
+
+    const userId = req.user._id;
+    const comment = req.body.comment;
+
+    const comment = await Comment.findById(req.params.postId);
+    if (comment.userId !== userId) {
+        res.status(403).end('-________-.')
+    }
+
+    try {
+        await Comment.update({ _id: req.params.commentId, userId }, { $set: { comment } });
+        res.status(200).end();
+    } catch (err) {
+        res.status(500).end('Internal Server Error!');
+    }
 });
 
 router.get('/api/user', passport.authenticate('jwt', { session: false }), async (req, res) => {
@@ -118,27 +168,24 @@ router.delete('/api/comments/:commentId', passport.authenticate('jwt', { session
     // grab the post from the comment
     // verify that
 
-    const comment = await Comment.findOne({ _id: req.params.commentId });
-
     if (!req.user) { 
-        console.log('Need to be logged in')
         res.status(422).send('Not logged in!');
         return;
     }
 
+    const comment = await Comment.findOne({ _id: req.params.commentId });
+
     if (comment) {
         const userId = comment.userId;
-        const isOwnerOfComment = userId === req.user._id;
-        const isOwnerOfPost = await Post.find({ _id: comment.postId, userId: req.user._id });
+        const isOwnerOfComment = userId == req.user._id;
+        const isOwnerOfPost = await Post.findOne({ _id: comment.postId, userId: req.user._id });
 
-        if (!isOwnerOfComment && isOwnerOfPost == undefined) {
-            console.log('Not Owner')
+        if (!isOwnerOfComment && isOwnerOfPost === null) {
             res.status(403).send({ message: 'You need to be an owner of the comment or the post that was commented on to delete it.' });
             return;
         }
 
         try {
-            console.log('Worked')
             await Comment.deleteOne({ _id: req.params.commentId });
             res.status(200).send({ message: 'Sucessfully deleted comment!' });
         } catch (err) {

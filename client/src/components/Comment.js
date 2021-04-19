@@ -58,7 +58,7 @@ class Comment extends React.Component {
                     {this.state.comments.map(({ _id, comment }) => (
                         <li key={_id}>
                             <span>{comment}</span>
-                            <button type="buttom" onClick={() => this.deleteComment(_id)}>X</button>
+                            {this.props.userId === comment.userId || this.props.userId === this.props.ownerId ? <button type="buttom" onClick={() => this.deleteComment(_id)}>X</button> : ''}
                         </li>
                     ))}
                 </ul>

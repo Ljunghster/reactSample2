@@ -42,12 +42,10 @@ passport.use(
         },
         async (email, password, done) => {
             try {
-                console.log(email)
                 const user = await User.findOne({
                     email
                 });
 
-                console.log(user)
                 if (user) {
                     const response = await bcrypt.compare(password, user.password);
                     if (response != true) {
@@ -77,10 +75,8 @@ passport.use(
                 email: jwt_payload.id,
             });
             if (user) {
-                console.log('User found in database');
                 done(null, user);
             } else {
-                console.log('User not found in database');
                 done(null, false, { message: 'User does not exist' });
             }
         } catch (err) {

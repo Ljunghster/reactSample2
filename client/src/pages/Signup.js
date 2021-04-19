@@ -10,13 +10,14 @@ class Signup extends React.Component {
         const password = event.target.password.value;
 
         try {
-            await axios.post('/api/users/register', {
+            const response = await axios.post('/api/users/register', {
                 email,
                 password
             });
+            localStorage.setItem('token', response.data.token);
             this.props.history.push('/')
         } catch (error) {
-                console.log(error);
+            console.log(error);
         }
     }
 

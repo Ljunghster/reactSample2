@@ -103,7 +103,7 @@ class DesktopContainer extends Component {
                 <Menu.Item as='a' active>
                   Home
                 </Menu.Item>
-                {localStorage.getItem('token') ? <Menu.Item as='a' onClick={() => history.push('/posts')}>Post</Menu.Item> : ''}
+                {localStorage.getItem('token') ? <Menu.Item as='a' onClick={() => history.push('/posts/view')}>Post</Menu.Item> : ''}
                 {localStorage.getItem('token') ? (
                   <Menu.Item onClick={() => {
                     localStorage.removeItem('token');

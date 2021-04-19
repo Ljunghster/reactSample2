@@ -5,7 +5,6 @@ import './App.css';
 import homepage from './pages/homepage';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
-import Post from './pages/Post';
 import ViewPosts from './pages/Posts';
 
 function App() {
@@ -15,7 +14,6 @@ function App() {
           <Route exact path="/" component={homepage} />
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/posts" component={Post} />
           <Route exact path="/posts/view" component={ViewPosts} />
         </Switch>
       </BrowserRouter>

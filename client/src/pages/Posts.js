@@ -1,14 +1,15 @@
 import React from 'react';
 import axios from 'axios';
 import { Container, Card } from 'semantic-ui-react';
-import Post from './Post';
-import Comment from './Comment';
+import Post from '../components/Post';
+import Comment from '../components/Comment';
 
 class Posts extends React.Component {
     state ={
         isLoading: true,
         posts: [],
-        userId: ''
+        userId: '',
+        isUpdating: false
     }
 
     componentDidMount() {
@@ -46,6 +47,10 @@ class Posts extends React.Component {
         });
     }
 
+    renderPostUpdateForm = () => {
+
+    }
+
     render() {
         return (
             <>
@@ -56,10 +61,21 @@ class Posts extends React.Component {
                         <>
                             <Card key={post._id}>
                                 <Card.Description>
-                                    <p>{post.message}</p>
+                                    {this.state.isUpdating ? (
+                                        <textarea />
+                                    ) :
+                                    /* : is false  */ 
+                                    (<div onClick={() => { this.setState({ isUpdating: true }) }}>
+                                        <p>{post.message}</p>
+                                    </div>
+                                    )}
                                 </Card.Description>
                                 <Card.Description>
-                                    <Comment postId={post._id} />
+                                    <Comment
+                                        postId={post._id}
+                                        userId={this.state.userId}
+                                        ownerId={post.userId}
+                                    />
                                 </Card.Description>
                             </Card>
                             {this.state.userId === post.userId ? <button onClick={() => this.deletePost(post._id)}>Delete</button>: ''}
