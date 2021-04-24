@@ -67,7 +67,7 @@ router.post('/create-post', passport.authenticate('jwt', { session: false }), (r
     res.end('Post succesfully created.');
 });
 
-router.patch('/api/posts/:postId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/api/posts/:postId', passport.authenticate('jwt', { session: false }), async (req, res) => {
     // get the current user's userId
     // find the post with the matching postId and userId
     // if the post does not exist, send an error
@@ -96,10 +96,10 @@ router.patch('/api/comments/:commentId', passport.authenticate('jwt', { session:
     // if the comment does exist, update it
 
     const userId = req.user._id;
-    const comment = req.body.comment;
+    const comment = req.body.comment; // edited version of comment
 
-    const comment = await Comment.findById(req.params.postId);
-    if (comment.userId !== userId) {
+    const findComment = await Comment.findById(req.params.postId);
+    if (findComment.userId !== userId) {
         res.status(403).end('-________-.')
     }
 

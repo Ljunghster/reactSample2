@@ -9,7 +9,7 @@ class Posts extends React.Component {
         isLoading: true,
         posts: [],
         userId: '',
-        isUpdating: false
+        isUpdating: false,
     }
 
     componentDidMount() {
@@ -47,8 +47,38 @@ class Posts extends React.Component {
         });
     }
 
-    renderPostUpdateForm = () => {
+    handlePostUpdate = (event) => {
+        event.preventDefault();
 
+        const message = event.target.post.value;
+        const postId = event.target.postId.value;
+
+        fetch('/api/posts/' + postId, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization: `jwt ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+               message, 
+            })
+        })
+        .then(() =>  this.setState({ isUpdating: false }))
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    renderPostUpdateForm = (postId, postMessage) => {
+
+        return(
+            <form onSubmit={this.handlePostUpdate}>
+                <textarea name="post" defaultValue={postMessage} />
+                <input type="hidden" name="postId" value={postId} />
+                <button>Submit</button>
+            </form>
+        )
     }
 
     render() {
@@ -61,9 +91,7 @@ class Posts extends React.Component {
                         <>
                             <Card key={post._id}>
                                 <Card.Description>
-                                    {this.state.isUpdating ? (
-                                        <textarea />
-                                    ) :
+                                    {this.state.isUpdating ? this.renderPostUpdateForm(post._id, post.message) :
                                     /* : is false  */ 
                                     (<div onClick={() => { this.setState({ isUpdating: true }) }}>
                                         <p>{post.message}</p>
