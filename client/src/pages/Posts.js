@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import axios from 'axios';
 import { Container, Card } from 'semantic-ui-react';
 import Post from '../components/Post';
@@ -88,13 +88,14 @@ class Posts extends React.Component {
                 <Post history={this.props.history} />
                 {this.state.posts.map(post => {
                     return (
-                        <>
-                            <Card key={post._id}>
+                        <Fragment key={post._id}>
+                            <Card>
                                 <Card.Description>
                                     {this.state.isUpdating ? this.renderPostUpdateForm(post._id, post.message) :
                                     /* : is false  */ 
                                     (<div onClick={() => { this.setState({ isUpdating: true }) }}>
                                         <p>{post.message}</p>
+                                        {post.image ? <img src={post.image} style={{ height: '175px' }} /> : ''}
                                     </div>
                                     )}
                                 </Card.Description>
@@ -107,7 +108,7 @@ class Posts extends React.Component {
                                 </Card.Description>
                             </Card>
                             {this.state.userId === post.userId ? <button onClick={() => this.deletePost(post._id)}>Delete</button>: ''}
-                        </>
+                        </Fragment>
                     );
                 })}
             </Container>

@@ -7,12 +7,17 @@ const postSchema = new mongoose.Schema({
     },
     message: {
         type: String,
-        required: 'Please enter a message.'
     },
     date: {
        type: Number,
        default: new Date().getTime() 
     },
+    image: {
+        type: String,
+    },
+    video: {
+        type: String,
+    }
 });
 
 const Post = mongoose.model('Post', postSchema);

@@ -62,7 +62,8 @@ router.post('/api/users/login', async (req, res, next) => {
 router.post('/create-post', passport.authenticate('jwt', { session: false }), (req, res) => {
     Post.create({
         userId: req.user._id,
-        message: req.body.message
+        message: req.body.message,
+        image: req.body.image,
     });
     res.end('Post succesfully created.');
 });
