@@ -3,6 +3,7 @@ const passport = require('passport');
 const User = require('../models/User');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
+const Scores = require('../models/Score');
 const jwt = require('jsonwebtoken');
 
 router.post('/api/users/register', async (req, res, next) => {
@@ -90,7 +91,7 @@ router.put('/api/posts/:postId', passport.authenticate('jwt', { session: false }
     }
 });
 
-router.patch('/api/comments/:commentId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/api/comments/:commentId', passport.authenticate('jwt', { session: false }), async (req, res) => {
     // get the current user's userId
     // find the comment with the matching commentId and userId
     // if the comment does not exist, send an error
@@ -196,6 +197,40 @@ router.delete('/api/comments/:commentId', passport.authenticate('jwt', { session
     } else {
         res.status(404).send({ message: 'Comment Not Found.' });
     }
+});
+
+router.get('/api/scores', (req, res) => {
+    Score.find({})
+        .then(scores => {
+            scores = scores.sort((score1, score2) => {
+                if (score1.score < score2.score) {
+                    return 1;
+                }
+
+                if (score1.score > score2.score) {
+                    return -1;
+                }
+
+                return 0;
+            });
+            scores = scores.slice(0, 3);
+            res.status(200).json(scores);
+        })
+        .catch(err => {
+            res.status(500).send(err);
+        });
+});
+
+router.post('/api/scores', (req, res) => {
+    const { name, score, time } = req.body;
+
+    Score.create({ name, score, time })
+        .then(score => {
+            res.status(200).json(score);
+        })
+        .catch(err => {
+            res.status(500).send(err);
+        });
 });
 
 module.exports = router;

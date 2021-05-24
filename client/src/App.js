@@ -6,6 +6,8 @@ import homepage from './pages/homepage';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import ViewPosts from './pages/Posts';
+import Quiz from './pages/Quiz';
+import HighScore from './pages/HighScore';
 
 function App() {
     return (
@@ -15,6 +17,8 @@ function App() {
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/posts/view" component={ViewPosts} />
+          <Route exact path="/highscores" component={HighScore} />
+          <Route exact path="/quiz" component={Quiz} />
         </Switch>
       </BrowserRouter>
     )

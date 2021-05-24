@@ -40,13 +40,20 @@ class Comment extends React.Component {
     }
 
     deleteComment = async (commentId) => {
-        console.log(commentId)
         await axios.delete(`/api/comments/${commentId}`, {
             headers: { Authorization: `jwt ${localStorage.getItem('token')}` }
         });
     }
 
     render() {
+        console.log('userid ', this.props.userId);
+
+        this.state.comments.forEach(comment => {
+            console.log('Comment UserId ', comment.userId)
+        })
+
+        //console.log(this.state.comments);
+
         return (
             <>
                 <form onSubmit={this.handleSubmit}>
@@ -55,10 +62,10 @@ class Comment extends React.Component {
                 </form>
                 <h6>Comments</h6>
                 <ul>
-                    {this.state.comments.map(({ _id, comment }) => (
+                    {this.state.comments.map(({ _id, comment, userId }) => (
                         <li key={_id}>
                             <span>{comment}</span>
-                            {this.props.userId === comment.userId || this.props.userId === this.props.ownerId ? <button type="buttom" onClick={() => this.deleteComment(_id)}>X</button> : ''}
+                            {this.props.userId == userId || this.props.userId === this.props.ownerId ? <button type="button" onClick={() => this.deleteComment(_id)}>X</button> : ''}
                         </li>
                     ))}
                 </ul>

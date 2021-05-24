@@ -6,6 +6,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const port = process.env.PORT || 3001;
+//local host 3001 for express side
 const path = require('path');
 const Cors = require('cors');
 const passport = require('passport');

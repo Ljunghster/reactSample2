@@ -103,7 +103,13 @@ class DesktopContainer extends Component {
                 <Menu.Item as='a' active>
                   Home
                 </Menu.Item>
-                {localStorage.getItem('token') ? <Menu.Item as='a' onClick={() => history.push('/posts/view')}>Post</Menu.Item> : ''}
+                {localStorage.getItem('token') ? (
+                  <>
+                    <Menu.Item as='a' onClick={() => history.push('/quiz')}>Quiz</Menu.Item>
+                    <Menu.Item as='a' onClick={() => history.push('/highscore')}>HighScore</Menu.Item>
+                    <Menu.Item as='a' onClick={() => history.push('/posts/view')}>Post</Menu.Item>
+                  </>
+                ): ''}
                 {localStorage.getItem('token') ? (
                   <Menu.Item onClick={() => {
                     localStorage.removeItem('token');
@@ -164,10 +170,19 @@ class MobileContainer extends Component {
             <Menu.Item as='a'>Company</Menu.Item>
             <Menu.Item as='a'>Careers</Menu.Item>
 
-            {localStorage.getItem('token') ? <Menu.Item onClick={() => {
-              localStorage.removeItem('token');
-              window.location.reload();
-            }}>Log Out</Menu.Item> : (
+            {localStorage.getItem('token') ?
+            (
+            <>
+              <Menu.Item as='a' onClick={() => history.push('/quiz')}>Quiz</Menu.Item>
+              <Menu.Item as='a' onClick={() => history.push('/highscore')}>HighScore</Menu.Item>
+              <Menu.Item onClick={() => {
+                localStorage.removeItem('token');
+                window.location.reload();
+              }}>
+                Log Out
+              </Menu.Item>
+            </>
+            ): (
               <>
                 <Menu.Item as='a'>Log in</Menu.Item>
                 <Menu.Item as='a'>Sign Up</Menu.Item>
