@@ -3,7 +3,7 @@ const passport = require('passport');
 const User = require('../models/User');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
-const Scores = require('../models/Score');
+const Score = require('../models/Score');
 const jwt = require('jsonwebtoken');
 
 router.post('/api/users/register', async (req, res, next) => {
@@ -213,7 +213,7 @@ router.get('/api/scores', (req, res) => {
 
                 return 0;
             });
-            scores = scores.slice(0, 3);
+
             res.status(200).json(scores);
         })
         .catch(err => {

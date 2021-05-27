@@ -10,6 +10,7 @@ class HighScore extends React.Component {
     componentDidMount() {
         axios.get('/api/scores')
             .then(scores => {
+                console.log(scores)
                 this.setState({
                     isLoading: false,
                     scores: scores.data
@@ -34,9 +35,6 @@ class HighScore extends React.Component {
                 score: Number(urlParams.get('score')),
                 time: Number(urlParams.get('time'))
             })
-                .then(() => {
-                    window.location.href = '/';
-                });
         }
     }
 

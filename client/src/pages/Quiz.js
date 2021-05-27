@@ -22,7 +22,7 @@ class App extends React.Component {
   componentDidUpdate() {
     if (questions.length === this.state.answeredQuestionCount || this.state.time === 0) {
       // end the quiz
-      this.props.history.push('/highscores?score=' + this.state.score + '&time=' + this.state.time);
+      this.props.history.push('/highscore?score=' + this.state.score + '&time=' + this.state.time);
     }
   }
 
